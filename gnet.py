@@ -28,8 +28,11 @@ class Gnet:
         self.interval = None
         self.the_plot = None
         self.prev_score = None
+        self.epochs = 200
 
 
+    def set_epochs(self,epochs=200):
+        self.epochs = epochs
 
     def reg(self):
 
@@ -41,7 +44,7 @@ class Gnet:
 
         nrOpts = {  "opx": 2, "depth": 1, "nvars": None, "pvc": .8, "pf": 1., 
                     "cross": .6, "mut": .2, "mrand": 1.}
-        gOpts = {   "mxepoch": 100, "bsize": 500, "bupdate": 50, "fraction": .8,
+        gOpts = {   "mxepoch": self.epochs, "bsize": 500, "bupdate": 50, "fraction": .8,
                     "history": 5, "mxtries": 15, "mode": 'REG'}                
 
         # maxepoch >= 1000  --> good
@@ -81,11 +84,11 @@ class Gnet:
 
         while(True):
             self.reg_thread()
+            e,m = self.net.get_cur_epoc()-1 , self.net.get_max_epoc()
+            prg_bar.text(f' peogress: {np.round(100*e/m,2)}% ')
             on = self.net.getLoading()
             if not on:
                 break
-            e,m = self.net.get_cur_epoc()-1 , self.net.get_max_epoc()
-            prg_bar.text(f' peogress: {np.round(100*e/m,2)}% ')
             time.sleep(2.)
 
         st.subheader(' Predicted')
@@ -129,7 +132,7 @@ class Gnet:
 
         nrOpts = {  "opx": 1, "depth": 2, "nvars": None, "pvc": .8, "pf": 1., 
                     "cross": .6, "mut": .2, "mrand": 1.}
-        gOpts = {   "mxepoch": 100, "bsize": 500, "bupdate": 50, "fraction": .8,
+        gOpts = {   "mxepoch": self.epochs, "bsize": 500, "bupdate": 50, "fraction": .8,
                     "history": 5, "mxtries": 15, "mode": 'CLA'}                
 
 
